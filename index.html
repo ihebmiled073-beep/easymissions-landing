@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EasyMissions - Simplifiez la gestion de vos missions freelance</title>
+  <meta name="description" content="Outil simple pour freelances et contractuels : suivi des missions, congés, génération de factures PDF et statistiques. Bêta gratuite !">
+  
+  <!-- Analytics - Plausible (RGPD-friendly) -->
+  <script defer data-domain="ihebmiled073-beep.github.io" src="https://plausible.io/js/script.js"></script>
+  
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #f1f5f9;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --warning: #f59e0b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: var(--text );
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header */
+    header {
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 4rem 0;
+      text-align: center;
+      background: white;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero .subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Buttons */
+    .button {
+      display: inline-block;
+      padding: 1rem 2rem;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .button:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .button-secondary {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .button-secondary:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* Beta Form */
+    .beta-signup {
+      background: white;
+      padding: 3rem 0;
+      margin: 2rem 0;
+    }
+
+    .form-container {
+      max-width: 500px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .form-container h2 {
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .form-container p {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    /* Features Grid */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      padding: 4rem 0;
+    }
+
+    .feature {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+
+    .feature:hover {
+      transform: translateY(-5px);
+    }
+
+    .feature h3 {
+      margin-bottom: 1rem;
+      color: var(--primary);
+      font-size: 1.25rem;
+    }
+
+    .feature ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .feature li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .feature li:last-child {
+      border-bottom: none;
+    }
+
+    /* Pricing Preview */
+    .pricing-preview {
+      background: var(--secondary);
+      padding: 3rem 0;
+      text-align: center;
+    }
+
+    .pricing-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 800px;
+      margin: 2rem auto 0;
+    }
+
+    .pricing-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .pricing-card.featured {
+      border: 2px solid var(--primary);
+      transform: scale(1.05);
+    }
+
+    .price {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin: 1rem 0;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--text);
+      color: white;
+      padding: 2rem 0;
+      text-align: center;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .pill {
+      background: rgba(255,255,255,0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .footer-row {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    /* Success message */
+    .success-message {
+      background: var(--success);
+      color: white;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-top: 1rem;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">EasyMissions</div>
+        <nav>
+          <ul class="nav-links">
+            <li><a href="#fonctionnalites">Fonctionnalités</a></li>
+            <li><a href="#tarifs">Tarifs</a></li>
+            <li><a href="#beta">Bêta</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="fade-in">Simplifiez la gestion de vos missions freelance</h1>
+      <p class="subtitle fade-in">Fini les tableurs Excel ! Suivez vos missions, générez vos factures et pilotez votre activité en quelques clics.</p>
+      <div style="margin-top: 2rem;">
+        <a href="#beta" class="button">Rejoindre la bêta gratuite</a>
+        <a href="GOOGLE_FORM_URL" class="button button-secondary" style="margin-left: 1rem;">Questionnaire (2 min)</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Beta Signup Form -->
+  <section id="beta" class="beta-signup">
+    <div class="container">
+      <div class="form-container">
+        <h2>🎁 Bêta gratuite pour les 50 premiers</h2>
+        <p>Inscrivez-vous pour tester EasyMissions en avant-première et influencer son développement.</p>
+        
+        <form id="beta-form" action="GOOGLE_FORM_URL" method="post" target="_blank">
+          <div class="form-group">
+            <label for="email">Votre adresse e-mail</label>
+            <input type="email" id="email" name="email" required placeholder="votre@email.com">
+          </div>
+          <div class="form-group">
+            <label for="status">Votre statut</label>
+            <select id="status" name="status" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border); border-radius: 6px;">
+              <option value="">Sélectionnez votre statut</option>
+              <option value="freelance">Freelance / Indépendant</option>
+              <option value="contractuel">Contractuel secteur public</option>
+              <option value="salarie">Salarié entreprise privée</option>
+              <option value="etudiant">Étudiant</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+          <button type="submit" class="button" style="width: 100%;">Rejoindre la liste d'attente</button>
+        </form>
+        
+        <div class="success-message" id="success-message">
+          ✅ Merci ! Vous recevrez un e-mail dès que la bêta sera disponible.
+        </div>
+        
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">
+          Ou remplissez notre <a href="GOOGLE_FORM_URL" style="color: var(--primary);">questionnaire détaillé</a> pour nous aider à prioriser les fonctionnalités.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="fonctionnalites">
+    <div class="container">
+      <div class="features">
+        <div class="feature fade-in">
+          <h3>🎯 Fonctionnalités principales</h3>
+          <ul>
+            <li>📅 Suivi des missions & jours travaillés</li>
+            <li>🌴 Gestion des congés et jours de repos</li>
+            <li>🧾 Génération automatique de rapports / factures PDF</li>
+            <li>📊 Statistiques + export Excel</li>
+            <li>👥 Multi‑clients / multi‑projets</li>
+            <li>☁️ Web app accessible partout</li>
+          </ul>
+        </div>
+        
+        <div class="feature fade-in">
+          <h3>💡 Pourquoi ce projet ?</h3>
+          <p class="small muted">Je suis <strong>Iheb</strong> (développeur Java/Angular, mission secteur public). J'ai vu trop de collègues galérer avec des suivis Excel. EasyMissions est né pour simplifier cette gestion. Aidez‑moi à le construire en testant la bêta 🙏</p>
+          <p style="margin-top: 1rem;"><a class="button" href="GOOGLE_FORM_URL">Rejoindre la liste d'attente</a></p>
+        </div>
+        
+        <div class="feature fade-in">
+          <h3>🔒 Nos engagements</h3>
+          <div style="margin-bottom: 1rem;">
+            <strong>Transparence</strong>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Tarif simple et accessible. Une version gratuite existera toujours pour les besoins essentiels.</p>
+          </div>
+          <div style="margin-bottom: 1rem;">
+            <strong>Respect des données</strong>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Hébergement en UE, chiffrement en transit, suppression à la demande. Nous ne revendons pas vos données.</p>
+          </div>
+          <div>
+            <strong>Roadmap ouverte</strong>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Les priorités seront votées par les utilisateurs de la bêta (vous !).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Preview -->
+  <section id="tarifs" class="pricing-preview">
+    <div class="container">
+      <h2>Tarification simple et transparente</h2>
+      <p style="color: var(--text-muted); margin-bottom: 2rem;">Aidez-nous à définir le prix juste en répondant à notre questionnaire</p>
+      
+      <div class="pricing-cards">
+        <div class="pricing-card">
+          <h3>Gratuit</h3>
+          <div class="price">0€<span style="font-size: 1rem; color: var(--text-muted);">/mois</span></div>
+          <p>Fonctionnalités essentielles pour débuter</p>
+        </div>
+        
+        <div class="pricing-card featured">
+          <h3>Pro</h3>
+          <div class="price">?€<span style="font-size: 1rem; color: var(--text-muted);">/mois</span></div>
+          <p>Toutes les fonctionnalités + support prioritaire</p>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 1rem;">Le prix sera défini avec vous !</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-row">
+        <div>© <span id="year"></span> EasyMissions • Projet indépendant par <strong>Iheb Miled</strong></div>
+        <div class="pill">Contact : <a href="mailto:contact@easymissions.fr" style="color:white; text-underline-offset:3px">contact@easymissions.fr</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Form handling
+    document.getElementById('beta-form').addEventListener('submit', function(e) {
+      // Track analytics event
+      if (window.plausible) {
+        plausible('beta_signup');
+      }
+      
+      // Show success message
+      setTimeout(() => {
+        document.getElementById('success-message').style.display = 'block';
+      }, 1000);
+    });
+
+    // Track clicks on secondary CTA buttons
+    document.querySelectorAll('a.button[href*="GOOGLE_FORM_URL"]').forEach(function(link) {
+      link.addEventListener('click', function() {
+        if (window.plausible) {
+          plausible('beta_signup_click');
+        }
+      });
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Add fade-in animation on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('fade-in');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.feature').forEach(el => {
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
